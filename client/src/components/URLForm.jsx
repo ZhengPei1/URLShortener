@@ -26,13 +26,12 @@ function URLForm(){
 }
 
 function handleOnChange(e, setFormValue){
-    console.log(e.target.value);
     setFormValue(e.target.value);
 }
 
 async function handleOnClick(formValue, setNewURL){
     const newURL = await axios.post("http://localhost:5000/shorten", {userURL: formValue})
-    setNewURL(newURL);
+    setNewURL(newURL.data);
 }
 
 export default URLForm;
