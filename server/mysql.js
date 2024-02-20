@@ -16,7 +16,7 @@ async function generateURL(URL) {
         database: auth.db_name
     });
 
-    const q = `SELECT * FROM ${auth.table_name} WHERE originalURL = ?`;
+    const q = `SELECT * FROM ${auth.table_name} WHERE originalUrl = ?`;
 
     let [query_result] = await db.query(q, [URL])
     
@@ -34,7 +34,7 @@ async function generateURL(URL) {
     // if the current URL hasn't been generated before
     if (query_result.length === 0) {
         const short = shortid.generate();
-        const val = { originalURL: URL, shortUrl: short, click: 1 };
+        const val = { originalUrl: URL, shortUrl: short, request: 1 };
         const qr = `INSERT INTO ${auth.table_name} SET ?`
 
         try{
@@ -53,11 +53,11 @@ async function generateURL(URL) {
     // if the current URL has been generated before
     else {
         const short = query_result[0].shortUrl;
-        const click = query_result[0].click;
-        const qr = `UPDATE ${auth.table_name} SET click = ? WHERE shortUrl = ?`
+        const request = query_result[0].request;
+        const qr = `UPDATE ${auth.table_name} SET request = ? WHERE shortUrl = ?`
 
         try{
-            await db.query(qr, [click + 1, short]);
+            await db.query(qr, [request + 1, short]);
         }catch(err){
   
             console.log("Error updating table!");
@@ -69,6 +69,10 @@ async function generateURL(URL) {
     }
 }
 
+
+// param: String URL - the shortened version of the URL
+// return the original URL from the database
+// or returns false and prints error messages
 async function findURL(URL) {
     const db = await mysql.createConnection({
         host: auth.host,
@@ -87,9 +91,9 @@ async function findURL(URL) {
             db.end();
             return false;
         }
-
         db.end();
-        return res[0].originalURL;
+        return res[0].originalUrl;
+
     }catch(err){
         console.log("database error");
         db.end();
@@ -99,4 +103,29 @@ async function findURL(URL) {
 }
 
 
-module.exports = { generateURL, findURL };
+// param: none 
+// return the 10 (or less) URLS with the most number of requests
+// or returns false and prints error messages
+
+async function findPopularUrls(){
+    const db = await mysql.createConnection({
+        host: auth.host,
+        user: auth.user,
+        password: auth.pass,
+        database: auth.db_name
+    });
+
+    const q = `SELECT * FROM ${auth.table_name} ORDER BY request DESC LIMIT 10`
+
+
+    try{
+        const [query_result] = await db.query(q);
+        return query_result;
+    }catch(err){
+        console.log("database error - can't access url history");
+        db.end();
+        return false;
+    }
+}
+
+module.exports = { generateURL, findURL,  findPopularUrls };

@@ -5,18 +5,24 @@ function URLForm(){
     const [formValue, setFormValue] = useState();
     const [newURLValue, setNewURL] = useState("No URL has been generated yet");
     const form = (
-        <div>
+        <div id = "form-area">
             <h1 id = "title">URL Shortener</h1>
-            <input type = "text" 
+            <input 
+            id = "input-form"
+            type = "text" 
             value = {formValue} 
             placeholder="Enter Your URL Here"
             onChange = {(e) => handleOnChange(e, setFormValue)}>
                 
             </input>
 
-            <button onClick={() => handleOnClick(formValue, setNewURL)} name="Shorten It!"></button>
+            <button 
+            id = "generate-button"
+            onClick={() => handleOnClick(formValue, setNewURL)}>
+                {"Shorten It!"}
+            </button>
 
-            <div id = "newURL">
+            <div id = "new-url">
                 {newURLValue}
             </div>
 
