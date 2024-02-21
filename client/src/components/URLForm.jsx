@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import {SERVER_URL} from "../assets/auth.json"
 
 function URLForm(){
     const [formValue, setFormValue] = useState();
@@ -48,7 +49,7 @@ function handleOnChange(e, setFormValue){
 }
 
 async function handleOnClick(formValue, setNewURL){
-    const newURL = await axios.post(process.env.REACT_APP_SERVER_URL + "/shorten", {userURL: formValue})
+    const newURL = await axios.post(SERVER_URL + "/shorten", {userURL: formValue})
     setNewURL(newURL.data);
 }
 
