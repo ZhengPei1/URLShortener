@@ -1,7 +1,5 @@
 const mysql = require("mysql2/promise");
-const util = require("util");
 const shortid = require('shortid');
-const auth = require("./auth.json");
 const { query } = require("express");
 
 // param: String URL - the URL needs to be shortened
@@ -10,13 +8,13 @@ const { query } = require("express");
 
 async function generateURL(URL) {
     const db = await mysql.createConnection({
-        host: auth.host,
-        user: auth.user,
-        password: auth.pass,
-        database: auth.db_name
+        host: process.env.HOST,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DB_NAME
     });
 
-    const q = `SELECT * FROM ${auth.table_name} WHERE originalUrl = ?`;
+    const q = `SELECT * FROM ${process.env.TABLE_NAME} WHERE originalUrl = ?`;
 
     let [query_result] = await db.query(q, [URL])
     
@@ -35,7 +33,7 @@ async function generateURL(URL) {
     if (query_result.length === 0) {
         const short = shortid.generate();
         const val = { originalUrl: URL, shortUrl: short, request: 1 };
-        const qr = `INSERT INTO ${auth.table_name} SET ?`
+        const qr = `INSERT INTO ${process.env.TABLE_NAME} SET ?`
 
         try{
             await db.query(qr, val);
@@ -54,7 +52,7 @@ async function generateURL(URL) {
     else {
         const short = query_result[0].shortUrl;
         const request = query_result[0].request;
-        const qr = `UPDATE ${auth.table_name} SET request = ? WHERE shortUrl = ?`
+        const qr = `UPDATE ${process.env.TABLE_NAME} SET request = ? WHERE shortUrl = ?`
 
         try{
             await db.query(qr, [request + 1, short]);
@@ -75,13 +73,13 @@ async function generateURL(URL) {
 // or returns false and prints error messages
 async function findURL(URL) {
     const db = await mysql.createConnection({
-        host: auth.host,
-        user: auth.user,
-        password: auth.pass,
-        database: auth.db_name
+        host: process.env.HOST,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DB_NAME
     });
 
-    const q = `SELECT * FROM ${auth.table_name} WHERE shortUrl = ?`;
+    const q = `SELECT * FROM ${process.env.TABLE_NAME} WHERE shortUrl = ?`;
     
     try{
         const [res] = await db.query(q, URL);
@@ -109,14 +107,14 @@ async function findURL(URL) {
 
 async function findPopularUrls(){
     const db = await mysql.createConnection({
-        host: auth.host,
-        user: auth.user,
-        password: auth.pass,
-        database: auth.db_name
+        host: process.env.HOST,
+        user: process.env.USER,
+        password: process.env.PASSWORD,
+        database: process.env.DB_NAME
     });
 
     // Limit: 5
-    const q = `SELECT * FROM ${auth.table_name} ORDER BY request DESC LIMIT 5`
+    const q = `SELECT * FROM ${process.env.TABLE_NAME} ORDER BY request DESC LIMIT 5`
 
 
     try{
