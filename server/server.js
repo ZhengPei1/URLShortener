@@ -17,6 +17,8 @@ app.get("/history", async (req, res) => {
         res.status(404).send();
         return
     }
+
+    result.forEach((obj) => {obj.shortUrl = req.protocol + '://' + req.get('host') + '/' + obj.shortUrl;})
     res.status(200).send(result);
 })
 
