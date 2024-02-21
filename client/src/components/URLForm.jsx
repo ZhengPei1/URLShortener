@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+import {baseUrl} from "../assets/baseUrl.json";
 
 function URLForm(){
     const [formValue, setFormValue] = useState();
-    const [newURLValue, setNewURL] = useState("No URL has been generated yet");
+    const [newURLValue, setNewURL] = useState(false);
+
     const form = (
         <div id = "form-area">
             <h1 id = "title">URL Shortener</h1>
@@ -23,7 +25,10 @@ function URLForm(){
             </button>
 
             <div id = "new-url">
-                {newURLValue}
+                {newURLValue? 
+                    <a href={newURLValue} target="_blank">{newURLValue}</a>
+                    :"No URL has been generated yet"}
+                
             </div>
 
         </div>
@@ -36,7 +41,7 @@ function handleOnChange(e, setFormValue){
 }
 
 async function handleOnClick(formValue, setNewURL){
-    const newURL = await axios.post("http://localhost:5000/shorten", {userURL: formValue})
+    const newURL = await axios.post(baseUrl + "/shorten", {userURL: formValue})
     setNewURL(newURL.data);
 }
 
