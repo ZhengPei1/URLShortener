@@ -7,15 +7,32 @@ function RequestCount(){
 
     useEffect(() =>{
         async function fetchHistory(){
-            const request = await axios.get(baseUrl + "/history");
+            try{
+                const request = await axios.get(baseUrl + "/history");
 
-            if(request.statusText === "OK"){
                 // received data
                 const data = request.data;
-                setElement(data.map((dt) => dataToComponent(dt)));
-            }else{
-                // error occurred
-                setElement(<h1>Can't access URL history, try refreshing the page</h1> );
+                const components = data.map((dt) => dataToComponent(dt));
+                const table = (
+                    <table id = "request-table">
+                        <caption>
+                            Most popular Urls
+                        </caption>
+                        
+                        <thead>
+                            <tr>
+                                <th>Original URL</th>
+                                <th>Shortened URL</th>
+                                <th># of requests</th>
+                            </tr>
+                            {components}
+                        </thead>
+                    </table>)
+
+                setElement(table);
+            }catch(err){
+                 // error occurred
+                 setElement(<h1>Can't access URL history, try refreshing the page</h1> );
             }
         }
 
@@ -25,29 +42,18 @@ function RequestCount(){
 
     return (
         <div id = "request-area">
-            <hr></hr>
-            <table id = "request-table">
-                <caption>
-                    Most popular Urls
-                </caption>
-                <thead>
-                    <tr>
-                        <td>Original URL</td>
-                        <td>Shortened URL</td>
-                        <td># of requests</td>
-                    </tr>
-                    {element};
-                </thead>
-            </table>
-        </div>);
+                    <hr></hr>
+                    {element}
+        </div>
+    );
 }
 
 
 function dataToComponent(data){
     return (
         <tr>
-            <td><a href={data.originalUrl} target="_blank">Visit</a></td>
-            <td>{data.shortUrl}</td>
+            <td><textarea readOnly>{data.originalUrl}</textarea></td>
+            <td><a href={data.shortUrl} target="_blank">{data.shortUrl}</a></td>
             <td>{data.request}</td>
         </tr>
     )

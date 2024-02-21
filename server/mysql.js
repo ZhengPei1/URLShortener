@@ -115,7 +115,8 @@ async function findPopularUrls(){
         database: auth.db_name
     });
 
-    const q = `SELECT * FROM ${auth.table_name} ORDER BY request DESC LIMIT 10`
+    // Limit: 5
+    const q = `SELECT * FROM ${auth.table_name} ORDER BY request DESC LIMIT 5`
 
 
     try{

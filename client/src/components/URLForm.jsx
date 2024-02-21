@@ -9,6 +9,14 @@ function URLForm(){
     const form = (
         <div id = "form-area">
             <h1 id = "title">URL Shortener</h1>
+
+            <a href = "https://github.com/ZhengPei1/URLShortener" 
+                target="_blank"
+                id = "github-link">
+                <img src = "/github.svg" alt = "github" id = "github-icon"></img>
+            </a>
+            
+
             <input 
             id = "input-form"
             type = "text" 
