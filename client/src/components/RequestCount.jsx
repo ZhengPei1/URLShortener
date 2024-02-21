@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {baseUrl} from "../assets/baseUrl.json";
 
 function RequestCount(){
     const [element, setElement] = useState(<h1>Loading ...</h1>);
@@ -8,7 +7,7 @@ function RequestCount(){
     useEffect(() =>{
         async function fetchHistory(){
             try{
-                const request = await axios.get(baseUrl + "/history");
+                const request = await axios.get(process.env.REACT_APP_SERVER_URL + "/history");
 
                 // received data
                 const data = request.data;
