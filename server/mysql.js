@@ -1,5 +1,6 @@
 const mysql = require("mysql2/promise");
 const shortid = require('shortid');
+const { getConnection } = require("./connection.js");
 const { query } = require("express");
 
 // param: String URL - the URL needs to be shortened
@@ -7,25 +8,17 @@ const { query } = require("express");
 // or returns false and prints error messages
 
 async function generateURL(URL) {
-    const db = await mysql.createConnection({
-        host: process.env.HOST,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DB_NAME
-    });
+    const db = await getConnection();
 
     const q = `SELECT * FROM ${process.env.TABLE_NAME} WHERE originalUrl = ?`;
 
     let [query_result] = await db.query(q, [URL])
-    
-
 
     try {
         await db.query(q, URL);
     } catch (err) {
         console.log(err);
         console.log("can't connect to database!")
-        db.end();
         return false
     }
 
@@ -40,11 +33,10 @@ async function generateURL(URL) {
         }catch(err){
             if (err) {
                 console.log("Error happens when inserting into db");
-                db.end();
                 return false;
             }
         }
-        db.end();
+        
         return short;
     }
 
@@ -59,10 +51,9 @@ async function generateURL(URL) {
         }catch(err){
   
             console.log("Error updating table!");
-            db.end();
             return false
         }
-        db.end();
+        
         return short;
     }
 }
@@ -72,12 +63,7 @@ async function generateURL(URL) {
 // return the original URL from the database
 // or returns false and prints error messages
 async function findURL(URL) {
-    const db = await mysql.createConnection({
-        host: process.env.HOST,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DB_NAME
-    });
+    const db = await getConnection();
 
     const q = `SELECT * FROM ${process.env.TABLE_NAME} WHERE shortUrl = ?`;
     
@@ -86,15 +72,13 @@ async function findURL(URL) {
 
         if(res.length === 0){
             console.log("can't find the given url");
-            db.end();
             return false;
         }
-        db.end();
+        
         return res[0].originalUrl;
 
     }catch(err){
         console.log("database error");
-        db.end();
         return false;
     }
 
@@ -106,23 +90,16 @@ async function findURL(URL) {
 // or returns false and prints error messages
 
 async function findPopularUrls(){
-    const db = await mysql.createConnection({
-        host: process.env.HOST,
-        user: process.env.USER,
-        password: process.env.PASSWORD,
-        database: process.env.DB_NAME
-    });
+    const db = await getConnection();
 
     // Limit: 5
     const q = `SELECT * FROM ${process.env.TABLE_NAME} ORDER BY request DESC LIMIT 5`
-
 
     try{
         const [query_result] = await db.query(q);
         return query_result;
     }catch(err){
         console.log("database error - can't access url history");
-        db.end();
         return false;
     }
 }
