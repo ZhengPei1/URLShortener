@@ -3,7 +3,9 @@ import { useEffect, useState } from "react";
 import {SERVER_URL} from "../assets/auth.json"
 
 function RequestCount(){
-    const [element, setElement] = useState(<h1>Loading ...</h1>);
+    const [element, setElement] = useState(<h1>As I'm using free tier hosting service, 
+        it is expected that this page will take a long time to load. The page is still
+        loading as long as no error message has been displayed.</h1>);
 
     useEffect(() =>{
         async function fetchHistory(){
