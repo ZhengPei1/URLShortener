@@ -103,11 +103,14 @@
   border-radius: 20px;
   box-shadow:7px 7px grey;
   border: 1px solid black;
+  overflow-y: auto;
 }
 
 #request-table{
-  width: 95%;
-  height: 90%;
+  max-width: 95%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
 
   font-weight: bold;
   text-align: center;

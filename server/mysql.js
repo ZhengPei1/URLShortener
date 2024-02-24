@@ -93,7 +93,7 @@ async function findPopularUrls(){
     const db = await getConnection();
 
     // Limit: 5
-    const q = `SELECT * FROM ${process.env.TABLE_NAME} ORDER BY request DESC LIMIT 5`
+    const q = `SELECT * FROM ${process.env.TABLE_NAME} ORDER BY request DESC LIMIT 10`
 
     try{
         const [query_result] = await db.query(q);
