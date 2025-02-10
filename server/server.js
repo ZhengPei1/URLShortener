@@ -10,6 +10,10 @@ const PORT = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) =>{
+    res.send("hello world, the server is running!");
+})
+
 // request to get the most popular url from url history
 app.get("/history", async (req, res) => {
     const result = await findPopularUrls();
