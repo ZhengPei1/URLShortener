@@ -1,4 +1,4 @@
-FROM alpine:3.20
+FROM node:20
 WORKDIR /url_shortener_server
 
 # install dependencies
