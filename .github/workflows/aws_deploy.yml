@@ -25,9 +25,9 @@ jobs:
       runs-on: self-hosted 
       steps:
       - name: Pull docker image
-        run: docker pull adfhaodjf/url_shortener:latest
+        run: sudo docker pull adfhaodjf/url_shortener:latest
       - name: Delete old container
-        run: docker rm -f url_shortener_container
+        run: sudo docker rm -f url_shortener_container
       - name: Run docker container
-        run: docker run -d -p 8080:5000 --name url_shortener_container adfhaodjf/url_shortener
+        run: sudo docker run -d -p 8080:5000 --name url_shortener_container adfhaodjf/url_shortener
         
