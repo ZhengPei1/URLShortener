@@ -18,4 +18,4 @@ jobs:
       - name: Build docker image
         run: docker build -t url_shortener ./server
       - name: Publish to Dockerhub
-        run: docker push zhengpei1/url_shortener/server:latest
+        run: docker push adfhaodjf/url_shortener:latest
