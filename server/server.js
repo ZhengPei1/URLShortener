@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(cors());
 
 app.get("/", (req, res) =>{
-    res.send("hello world, the server is running!");
+    res.send("hello world, the server is running-1!");
 })
 
 // request to get the most popular url from url history
