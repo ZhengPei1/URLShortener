@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  builds:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -19,3 +19,15 @@ jobs:
         run: docker build -t adfhaodjf/url_shortener ./server
       - name: Publish to Dockerhub
         run: docker push adfhaodjf/url_shortener:latest
+        
+  deploy:
+      needs: build
+      runs-on: self-hosted 
+      steps:
+      - name: Pull docker image
+        run: docker pull adfhaodjf/url_shortener:latest
+      - name: Delete old container
+        run: docker rm -f url_shortener_container
+      - name: Run docker container
+        run: docker run -d -p 8080:5000 --name url_shortener_container adfhaodjf/url_shortener
+        
